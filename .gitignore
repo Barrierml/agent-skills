@@ -1,0 +1,10 @@
+.DS_Store
+.env
+.env.*
+*.key
+*.pem
+*.png
+*.jpg
+*.webp
+response.json
+out.json
