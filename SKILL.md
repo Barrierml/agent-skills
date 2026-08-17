@@ -40,10 +40,10 @@ Helpers in `${CLAUDE_SKILL_DIR}/scripts/`:
 |---|---|---|
 | `web_search` | live | `POST /v1/search` |
 | image | live | `POST /v1/images/generations`, `POST /v1/images/edits` |
-| speech / ASR / TTS | chat/audio models exist; dedicated speech ability not landed | `POST /v1/audio/transcriptions`, `POST /v1/audio/speech` |
+| `speech_asr` / `speech_tts` | live via Xiaomi channel | `POST /v1/audio/transcriptions`, `POST /v1/audio/speech` |
 | video | live OpenAI video path | `POST /v1/videos`, then poll `GET /v1/videos/{id}` |
 
-Future Tako work (not this skill): add Xiaomi MiMo ASR/TTS as a first-class speech ability, same inventory model as `web_search`. Until that ships, use the OpenAI-compatible audio routes below.
+Do not invent brand ability names like `xiaomi_asr`. Tako selects the Xiaomi channel because it publishes `speech_asr` / `speech_tts`.
 
 ## 1. Web search
 
@@ -125,16 +125,7 @@ curl -sS "$TAKO_BASE_URL/v1/audio/transcriptions" \
 
 Default model: `mimo-v2.5-asr`. Expected `{"text":"..."}`.
 
-Current production fact: Xiaomi channel `23` already publishes `mimo-v2.5-asr`. Official Xiaomi docs also accept chat-style `input_audio`. Prefer the OpenAI transcriptions path first; if it fails with model/path errors, fall back to:
-
-```bash
-# fallback only
-python3 - <<'PY'
-# send wav as chat input_audio to /v1/chat/completions with model=mimo-v2.5-asr
-PY
-```
-
-Keep files small. Xiaomi's documented limit is about 10MB after base64.
+Keep files small. Xiaomi's documented limit is about 10MB after base64. Tako converts the uploaded file to official Xiaomi `input_audio` for you; do not send chat-completions yourself.
 
 ### TTS — create speech
 
@@ -208,4 +199,4 @@ Use a model the user names. Do not assume every Tako token can call every video 
 - Do not use chat-completions as a substitute for `/v1/search`.
 - Do not poll image task URLs on Tako.
 - Do not hardcode channel IDs.
-- Do not claim Xiaomi speech is a first-class Tako ability until New API lands `speech` the same way as `web_search`.
+- Do not call `/v1/chat/completions` for ASR or TTS. Use `/v1/audio/*`.
