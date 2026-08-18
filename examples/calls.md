@@ -1,27 +1,30 @@
 # Search
 
+Verified HTTP 200 against `https://tako.shiroha.tech/v1/search`.
+
 ```bash
-export TAKO_API_KEY="sk-..."
-./scripts/tako-search.sh "What is the capital of Japan?" --count 3
+export TAKO_API_KEY="cr_..."
+./scripts/tako-search.sh "capital of Japan" --count 3
 ```
 
-# Image
+Optional family filter:
 
 ```bash
-./scripts/tako-image.sh generate "a corgi on Mars" --model gpt-image-2
+./scripts/tako-search.sh "capital of Japan" --provider groq --count 3
 ```
 
-# Speech
+# Image generate
+
+Verified HTTP 200 against `/v1/images/generations` with `gpt-image-2`.
 
 ```bash
-./scripts/tako-speech.sh tts "你好，这是语音合成测试" --out ./hello.wav
-./scripts/tako-speech.sh asr ./hello.wav
+./scripts/tako-image.sh generate "a tiny red apple on a white table, simple photo" --model gpt-image-2
 ```
 
-# Video
+# Image edit
+
+Verified HTTP 200 against `/v1/images/edits` with `gpt-image-2`.
 
 ```bash
-./scripts/tako-video.sh create "a calico cat playing piano"
-./scripts/tako-video.sh status "$TASK_ID"
-./scripts/tako-video.sh download "$TASK_ID" --out ./out.mp4
+./scripts/tako-image.sh edit ./input.png "make the apple green" --model gpt-image-2
 ```
